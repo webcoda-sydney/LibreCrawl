@@ -1,0 +1,39 @@
+name: Deploy LibreCrawl to ACI
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Checkout Repository'
+      uses: actions/checkout@v4
+
+    - name: 'Login to Azure'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: 'Build and Push to ACR'
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    - run: |
+        docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/librecrawl:${{ github.sha }}
+        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/librecrawl:${{ github.sha }}
+
+    - name: 'Deploy to ACI'
+      uses: 'azure/aci-deploy@v1'
+      with:
+        resource-group: WebcodaDevResourceGroup
+        dns-name-label: librecrawl-app-${{ github.run_id }}
+        image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/librecrawl:${{ github.sha }}
+        name: librecrawl-instance
+        location: 'eastus'
+        ports: 5000 # LibreCrawl default port
+        registry-username: ${{ secrets.REGISTRY_USERNAME }}
+        registry-password: ${{ secrets.REGISTRY_PASSWORD }}

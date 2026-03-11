@@ -35,5 +35,6 @@ jobs:
         name: librecrawl-instance
         location: 'eastus'
         ports: 5000 # LibreCrawl default port
+        environment-variables: LOCAL_MODE=TRUE
         registry-username: ${{ secrets.REGISTRY_USERNAME }}
         registry-password: ${{ secrets.REGISTRY_PASSWORD }}

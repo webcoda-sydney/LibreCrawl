@@ -30,10 +30,10 @@ jobs:
       uses: 'azure/aci-deploy@v1'
       with:
         resource-group: WebcodaDevResourceGroup
-        dns-name-label: librecrawl-app-${{ github.run_id }}
+        dns-name-label: librecrawl-app-22985517701 #${{ github.run_id }}
         image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/librecrawl:${{ github.sha }}
         name: librecrawl-instance
-        location: 'eastus'
+        location: 'australiaeast'
         ports: 5000 # LibreCrawl default port
         registry-username: ${{ secrets.REGISTRY_USERNAME }}
         registry-password: ${{ secrets.REGISTRY_PASSWORD }}

@@ -64,6 +64,7 @@ EXPOSE 5000
 # Set environment variables
 ENV FLASK_APP=main.py
 ENV PYTHONUNBUFFERED=1
+ENV LOCAL_MODE=true
 
 # Run the application
 # The command is handled by docker-compose.yml
